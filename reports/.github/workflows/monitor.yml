@@ -1,0 +1,26 @@
+name: Monitor festival (demo)
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # ogni Lunedì alle 06:00 UTC
+  workflow_dispatch: {}    # puoi farlo partire a mano
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Aggiorna report minimale
+        run: |
+          echo "# Report festival – aggiornato $(date -u +'%Y-%m-%d %H:%M UTC')" > reports/ultimo_report.md
+          echo "" >> reports/ultimo_report.md
+          echo "Questa è una demo. Il robot sa scrivere e salvare." >> reports/ultimo_report.md
+
+      - name: Commit automatico
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: aggiornamento report demo"
+          file_pattern: reports/ultimo_report.md
